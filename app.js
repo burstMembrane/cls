@@ -4,15 +4,10 @@
 // run npm link
 
 var fs = require('fs');
-const util = require('util');
 const colors = require('colors');
 const path = require('path');
 const { lstat } = fs.promises
-const fileColor = 'green';
-const folderColor = 'red';
-const colorSettings = {
 
-}
 
 const defaultTheme = {
     file: 'rainbow',
@@ -26,18 +21,24 @@ const targetDir = process.argv[2] || process.cwd();
 
 
 fs.readFile(__dirname + '/colorsettings.json', (err, settings) => {
-
+    if(err) { colors.setTheme(defaultTheme) }
     // load color settings
-    const colorSettings = JSON.parse(settings);
+    try {
+        const colorSettings = JSON.parse(settings);
 
-    customTheme.file = colorSettings.fileColor;
-    customTheme.fileBg = colorSettings.fileBackground;
-    customTheme.folderBg = colorSettings.folderBackground;
-    customTheme.folder = colorSettings.folderColor;
+        customTheme.file = colorSettings.fileColor;
+        customTheme.fileBg = colorSettings.fileBackground;
+        customTheme.folderBg = colorSettings.folderBackground;
+        customTheme.folder = colorSettings.folderColor;
+        // if there is a custom theme, load it
+        if(customTheme && !err) {
+            colors.setTheme(customTheme);
+        } else { colors.setTheme(defaultTheme) }
+    } catch(err) {
+        console.log("Settings file not found -- loading default theme.. ".red, err);
+        colors.setTheme(defaultTheme);
+    }
 
-    if(customTheme) {
-        colors.setTheme(customTheme);
-    } else { colors.setTheme(defaultTheme) }
 
 
     fs.readdir(targetDir, async(err, filenames) => {
