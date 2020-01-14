@@ -22,7 +22,7 @@ const targetDir = process.argv[2] || process.cwd();
 
 fs.readFile(__dirname + '/colorsettings.json', (err, settings) => {
     if(err) { colors.setTheme(defaultTheme) }
-    // load color settings
+
     try {
         const colorSettings = JSON.parse(settings);
 
@@ -46,7 +46,7 @@ fs.readFile(__dirname + '/colorsettings.json', (err, settings) => {
         if(err) console.log(err);
 
         const statPromises = filenames.map((filename) => {
-            // join filenmae to directory path
+            // join filename to directory path
             return lstat(path.join(targetDir, filename));
         });
 
